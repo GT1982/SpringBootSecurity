@@ -25,4 +25,9 @@ public class BusinessProcessController {
     public BusinessProcess getBusinessProcess(@PathVariable ("processId") String processId){
         return bsService.getBusienssProcessById(processId);
     }
+
+    @PostMapping()
+    public void createProcess(@RequestBody BusinessProcess businessProcess){
+       bsService.createNewBusinessProcess(businessProcess);
+    }
 }

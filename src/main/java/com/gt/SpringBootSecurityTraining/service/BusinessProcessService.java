@@ -24,4 +24,8 @@ public class BusinessProcessService {
         List<BusinessProcess> bsProcessList = bsRepository.findBusinessProcessByProcessId(processId);
         return bsProcessList.stream().findFirst().orElseThrow(() -> new IllegalStateException("Process Id: "+ processId + " not found"));
     }
+
+    public void createNewBusinessProcess(BusinessProcess businessProcess){
+        bsRepository.save(businessProcess);
+    }
 }
