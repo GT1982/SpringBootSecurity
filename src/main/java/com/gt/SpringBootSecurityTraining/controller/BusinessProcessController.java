@@ -4,6 +4,7 @@ import com.gt.SpringBootSecurityTraining.model.BusinessProcess;
 import com.gt.SpringBootSecurityTraining.service.BusinessProcessService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,7 +23,7 @@ public class BusinessProcessController {
     }
 
     @GetMapping(path = "{processId}")
-    public BusinessProcess getBusinessProcess(@PathVariable ("processId") String processId){
+    public BusinessProcess getBusinessProcess(@PathVariable("processId") String processId){
         return bsService.getBusienssProcessById(processId);
     }
 
@@ -30,4 +31,11 @@ public class BusinessProcessController {
     public void createProcess(@RequestBody BusinessProcess businessProcess){
        bsService.createNewBusinessProcess(businessProcess);
     }
+
+    @DeleteMapping(path = "{processId}")
+    @PreAuthorize("hasAuthority('process:write')")
+    public void deleteProcess(@PathVariable("processId") String processId){
+        System.out.println("Delete Process: " + processId);
+    }
+
 }
