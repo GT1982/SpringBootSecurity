@@ -33,7 +33,6 @@ public class BusinessProcessController {
     }
 
     @DeleteMapping(path = "{processId}")
-    @PreAuthorize("hasAuthority('process:write')")
     public void deleteProcess(@PathVariable("processId") String processId){
         System.out.println("Delete Process: " + processId);
     }

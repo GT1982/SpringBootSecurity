@@ -1,7 +1,6 @@
 package com.gt.SpringBootSecurityTraining.security;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -15,14 +14,16 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
-import static com.gt.SpringBootSecurityTraining.security.ApplicationUserPermissions.*;
-import static com.gt.SpringBootSecurityTraining.security.ApplicationUserRole.*;
+import java.util.concurrent.TimeUnit;
+
+import static com.gt.SpringBootSecurityTraining.security.ApplicationUserPermissions.PROCESS_WRITE;
+import static com.gt.SpringBootSecurityTraining.security.ApplicationUserRole.ADMINISTRATOR;
+import static com.gt.SpringBootSecurityTraining.security.ApplicationUserRole.BUSINESS_USER;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-@EnableGlobalMethodSecurity(prePostEnabled = true)
-public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
+public class ApplicationSecurityFormAuthConfig extends WebSecurityConfigurerAdapter {
 
     private final PasswordEncoder passwordEncoder;
 
@@ -37,7 +38,20 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest()
                 .authenticated()
                 .and()
-                .httpBasic();
+                .formLogin()
+                .loginPage("/login").permitAll()
+                .defaultSuccessUrl("/business_processes", true)
+                .and()
+                .rememberMe()
+                    .tokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(21))
+                    .key("secret_key")
+                .and()
+                .logout()
+                    .logoutUrl("/logout")
+                    .clearAuthentication(true)
+                    .invalidateHttpSession(true)
+                    .deleteCookies("JSESSIONID","remember-me")
+                    .logoutSuccessUrl("/login");
     }
 
     @Override
